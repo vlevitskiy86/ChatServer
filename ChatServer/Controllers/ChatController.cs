@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ChatServer.Models;
+using ChatServer.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatServer.Controllers
@@ -11,47 +12,43 @@ namespace ChatServer.Controllers
     [Route("api/[controller]")]
     public class ChatController : Controller
     {
-        private readonly IList<MessageModel> Messages = new List<MessageModel>();
+        //private readonly IList<Message> Messages = new List<Message>();
+        IMessageService _service;
 
-        public ChatController()
+        public ChatController(IMessageService service)
         {
-            Populate();
-        }
-
-        private void Populate()
-        {
-            Messages.Add(new MessageModel { AuthorName = "John1", Text = "Ldfkj dkcjdsfsf asdlk laksdj", Id = Messages.Count });
-            Messages.Add(new MessageModel { AuthorName = "John2", Text = "Ldfkj gdhdfgdkcjasdfglk laksdj", Id = Messages.Count });
-            Messages.Add(new MessageModel { AuthorName = "John3", Text = "Ldfkj asd dkcjasdlk ldaksdj", Id = Messages.Count });
-            Messages.Add(new MessageModel { AuthorName = "John4", Text = "Ldfkj uiyuidkcjasdlk trlaksdj", Id = Messages.Count });
+            _service = service;
         }
 
         [HttpPost]
-        public void Post([FromBody] MessageModel message)
+        public IActionResult Post([FromBody] Message message)
         {
-            Messages.Add(message);
-            //UpdateAllClients();
+            _service.AddMessage(message);
+
+            return Ok();
         }
 
         // GET api/
         [HttpGet("Messages")]
-        public IEnumerable<MessageModel> AllMessages()
+        public List<Message> AllMessages()
         {
-            return Messages;
+            return _service.Messages().GetAwaiter().GetResult();
         }
 
         [HttpGet("NewMessages")]
-        public IEnumerable<MessageModel> NewMessages()
+        public List<Message> NewMessages()
         {
-            return Messages.Where(x => x.IsNew);
+            return _service.NewMessages().GetAwaiter().GetResult();
         }
 
-        [HttpGet("NewMessagesRead")]
-        public string NewMessagesRead()
-        {
-            Messages.Where(x => x.IsNew).ToList().ForEach(x => x.IsNew = false);
-            return "Ok";
-        }
+        //[HttpGet("NewMessagesRead")]
+        //public string MessageReadStatus()
+        //{
+        //    var items = Messages.Where(x => x.IsNew);
+        //    foreach (var i in items)
+        //        i.IsNew = false;
+        //    return "Ok";
+        //}
 
         // GET api/values
         //[HttpGet]

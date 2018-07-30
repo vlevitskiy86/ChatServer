@@ -20,7 +20,7 @@ namespace ChatClient
                 instance.GetNewMessages().GetAwaiter().GetResult();
                 instance.GetNewMessages().GetAwaiter().GetResult();
             }
-            //Console.WriteLine("Hello World!");
+            Console.ReadLine();
         }
 
         private async Task GetMessages()
