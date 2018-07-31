@@ -6,6 +6,7 @@ using ChatServer.Data;
 using ChatServer.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +32,23 @@ namespace ChatServer
             //services.AddSingleton(IMessageContext, MessageContext);
             services.AddScoped<IMessageService, MessageService>();
 
+            //services.Configure<CookiePolicyOptions>(options =>
+            //{
+            //    options.CheckConsentNeeded = context => true;
+            //    options.MinimumSameSitePolicy = SameSiteMode.None;
+            //});
+
             services.AddMvc();
+
+            //services.AddCors(options => options.AddPolicy("CorsPolicy",
+            //builder =>
+            //{
+            //    builder.AllowAnyMethod().AllowAnyHeader()
+            //           .WithOrigins("http://localhost:55830")
+            //           .AllowCredentials();
+            //}));
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +58,15 @@ namespace ChatServer
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //app.UseHttpsRedirection();
+            //app.UseStaticFiles();
+            //app.UseCookiePolicy();
+            //app.UseCors("CorsPolicy");
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chatHub");
+            });
 
             app.UseMvc();
         }
