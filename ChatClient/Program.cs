@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR.Client;
+﻿using IdentityModel.Client;
+using Microsoft.AspNetCore.SignalR.Client;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,23 +10,35 @@ namespace ChatClient
     class Program
     {
         private static HubConnection connection;
-        private string _name;
-        private HttpClient _client = new HttpClient();
-        private string _baseAPIUri = "http://localhost:5001/";
+        private static string _name;
+        private static string _token;
+        private static HttpClient _client = new HttpClient();
+        private static string _baseAPIUri = "http://localhost:5000/";
         private static string line;
 
         static void Main(string[] args)
         {
-            do
-            {
-                var instance = new Program();
+            Console.WriteLine("What is your name?");
+            _name = Console.ReadLine();
 
-                connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5001/ChatHub")
+            CallToTokenServer();
+
+            connection = new HubConnectionBuilder()
+                //.WithUrl("http://localhost:5000/ChatHub", options =>
+                //{
+                //    options.AccessTokenProvider = () => Task.FromResult(_token);
+                //})
+                .WithUrl("http://localhost:5000/ChatHub")
                 .Build();
 
-                instance.Connect();
-                //instance.GetMessages().GetAwaiter().GetResult();
+            // call api
+            _client.SetBearerToken(_token);
+            Connect();
+
+            do
+            {
+
+                GetMessages().GetAwaiter().GetResult();
                 ////while (true)
                 //{
                 //    instance.GetNewMessages().GetAwaiter().GetResult();
@@ -32,11 +46,45 @@ namespace ChatClient
                 //    instance.GetNewMessages().GetAwaiter().GetResult();
                 //}
                 line = Console.ReadLine();
-                instance.SendMessage(line);
+                SendMessage(line);
             } while (line != "exit");
         }
 
-        private async void Connect()
+        public static void CallToTokenServer()
+        {
+            var disco = DiscoveryClient.GetAsync("https://localhost:5001").GetAwaiter().GetResult();
+            if (disco.IsError)
+            {
+                Console.WriteLine(disco.Error);
+                return;
+            }
+
+            var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
+            var tokenResponse = tokenClient.RequestClientCredentialsAsync("api1").GetAwaiter().GetResult();
+
+            if (tokenResponse.IsError)
+            {
+                Console.WriteLine(tokenResponse.Error);
+                return;
+            }
+
+            Console.WriteLine(tokenResponse.Json);
+
+            _token = tokenResponse.AccessToken;
+
+            //var response = await client.GetAsync("http://localhost:5001/identity");
+            //if (!response.IsSuccessStatusCode)
+            //{
+            //    Console.WriteLine(response.StatusCode);
+            //}
+            //else
+            //{
+            //    var content = await response.Content.ReadAsStringAsync();
+            //    Console.WriteLine(JArray.Parse(content));
+            //}
+        }
+
+        private static async void Connect()
         {
             connection.On<string, string>("ReceiveMessage", (user, message) =>
             {
@@ -61,31 +109,31 @@ namespace ChatClient
             }
         }
 
-        private async void SendMessage(string text)
+        private static async void SendMessage(string text)
         {
             try
             {
                 await connection.InvokeAsync("SendMessage",
-                    "User 1", text);
+                    _name, text);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
         }
-        private async Task GetMessages()
+        private static async Task GetMessages()
         {
             var result = await _client.GetAsync(_baseAPIUri + "api/chat/messages", HttpCompletionOption.ResponseContentRead);
-            var text =  await result.Content.ReadAsStringAsync();
+            var text = await result.Content.ReadAsStringAsync();
             Console.WriteLine(text);
         }
 
-        private async Task GetNewMessages()
-        {
-            var result = await _client.GetAsync(_baseAPIUri + "api/chat/newmessages", HttpCompletionOption.ResponseContentRead);
-            var text = await result.Content.ReadAsStringAsync();
-            await _client.GetAsync(_baseAPIUri + "api/chat/newmessagesread", HttpCompletionOption.ResponseContentRead);
-            Console.WriteLine(text);
-        }
+        //private async Task GetNewMessages()
+        //{
+        //    var result = await _client.GetAsync(_baseAPIUri + "api/chat/newmessages", HttpCompletionOption.ResponseContentRead);
+        //    var text = await result.Content.ReadAsStringAsync();
+        //    await _client.GetAsync(_baseAPIUri + "api/chat/newmessagesread", HttpCompletionOption.ResponseContentRead);
+        //    Console.WriteLine(text);
+        //}
     }
 }
