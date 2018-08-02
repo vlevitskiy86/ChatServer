@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace ChatServer
 {
-    //[Authorize]
+    [Authorize]
     public class ChatHub : Hub
     {
         public async Task SendMessage(string user, string message)

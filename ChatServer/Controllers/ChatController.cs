@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ChatServer.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     public class ChatController : Controller
     {

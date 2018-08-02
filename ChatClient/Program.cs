@@ -13,7 +13,7 @@ namespace ChatClient
         private static string _name;
         private static string _token;
         private static HttpClient _client = new HttpClient();
-        private static string _baseAPIUri = "http://localhost:5000/";
+        private static string _baseAPIUri = "http://localhost:5001/";
         private static string line;
 
         static void Main(string[] args)
@@ -24,21 +24,19 @@ namespace ChatClient
             CallToTokenServer();
 
             connection = new HubConnectionBuilder()
-                //.WithUrl("http://localhost:5000/ChatHub", options =>
-                //{
-                //    options.AccessTokenProvider = () => Task.FromResult(_token);
-                //})
-                .WithUrl("http://localhost:5000/ChatHub")
+                .WithUrl("http://localhost:5001/chatHub", options =>
+                {
+                    options.AccessTokenProvider = () => Task.FromResult(_token);
+                })
+                //.WithUrl("http://localhost:5001/chatHub")
                 .Build();
 
-            // call api
-            _client.SetBearerToken(_token);
             Connect();
 
             do
             {
 
-                GetMessages().GetAwaiter().GetResult();
+                //GetMessages().GetAwaiter().GetResult();
                 ////while (true)
                 //{
                 //    instance.GetNewMessages().GetAwaiter().GetResult();
@@ -52,7 +50,7 @@ namespace ChatClient
 
         public static void CallToTokenServer()
         {
-            var disco = DiscoveryClient.GetAsync("https://localhost:5001").GetAwaiter().GetResult();
+            var disco = DiscoveryClient.GetAsync("http://localhost:5000").GetAwaiter().GetResult();
             if (disco.IsError)
             {
                 Console.WriteLine(disco.Error);
@@ -71,16 +69,17 @@ namespace ChatClient
             Console.WriteLine(tokenResponse.Json);
 
             _token = tokenResponse.AccessToken;
+            //_client.SetBearerToken(_token);
 
-            //var response = await client.GetAsync("http://localhost:5001/identity");
+            //var response = _client.GetAsync("http://localhost:5001/identity").GetAwaiter().GetResult();
             //if (!response.IsSuccessStatusCode)
             //{
             //    Console.WriteLine(response.StatusCode);
             //}
             //else
             //{
-            //    var content = await response.Content.ReadAsStringAsync();
-            //    Console.WriteLine(JArray.Parse(content));
+            //    var content = response.Content.ReadAsStringAsync();
+            //    Console.WriteLine(JArray.Parse(content.Result));
             //}
         }
 

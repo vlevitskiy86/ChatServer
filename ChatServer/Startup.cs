@@ -38,7 +38,7 @@ namespace ChatServer
 
             services.AddDbContext<IdentityDbContext>(options => options.UseInMemoryDatabase("UsersDB"));
 
-            services.AddIdentity<IdentityUser, IdentityRole>();
+            //services.AddIdentity<IdentityUser, IdentityRole>();
 
             //services.Configure<CookiePolicyOptions>(options =>
             //{
@@ -49,58 +49,58 @@ namespace ChatServer
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "https://localhost:5001";
+                    options.Authority = "http://localhost:5000";
                     options.RequireHttpsMetadata = false;
 
                     options.ApiName = "api1";
                 });
 
-            //    services.AddAuthentication(options =>
-            //    {
-            //        // Identity made Cookie authentication the default.
-            //        // However, we want JWT Bearer Auth to be the default.
-            //        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            //    })
-            //.AddJwtBearer(options =>
-            //{
-            //    // Configure JWT Bearer Auth to expect our security key
-            //    options.TokenValidationParameters =
-            //        new TokenValidationParameters
-            //        {
-            //            LifetimeValidator = (before, expires, token, param) =>
-            //            {
-            //                return expires > DateTime.UtcNow;
-            //            },
-            //            ValidateAudience = false,
-            //            ValidateIssuer = false,
-            //            ValidateActor = false,
-            //            ValidateLifetime = true,
-            //            //IssuerSigningKey = SecurityKey
-            //        };
+        //    services.AddAuthentication(options =>
+        //    {
+        //            // Identity made Cookie authentication the default.
+        //            // However, we want JWT Bearer Auth to be the default.
+        //            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        //    })
+        //.AddJwtBearer(options =>
+        //{
+        //        // Configure JWT Bearer Auth to expect our security key
+        //        options.TokenValidationParameters =
+        //        new TokenValidationParameters
+        //        {
+        //            LifetimeValidator = (before, expires, token, param) =>
+        //            {
+        //                return expires > DateTime.UtcNow;
+        //            },
+        //            ValidateAudience = false,
+        //            ValidateIssuer = false,
+        //            ValidateActor = false,
+        //            ValidateLifetime = true,
+        //                //IssuerSigningKey = SecurityKey
+        //            };
 
-            //    // We have to hook the OnMessageReceived event in order to
-            //    // allow the JWT authentication handler to read the access
-            //    // token from the query string when a WebSocket or 
-            //    // Server-Sent Events request comes in.
-            //    options.Events = new JwtBearerEvents
-            //    {
-            //        OnMessageReceived = context =>
-            //        {
-            //            var accessToken = context.Request.Query["access_token"];
+        //        // We have to hook the OnMessageReceived event in order to
+        //        // allow the JWT authentication handler to read the access
+        //        // token from the query string when a WebSocket or 
+        //        // Server-Sent Events request comes in.
+        //        options.Events = new JwtBearerEvents
+        //    {
+        //        OnMessageReceived = context =>
+        //        {
+        //            var accessToken = context.Request.Query["access_token"];
 
-            //            // If the request is for our hub...
-            //            var path = context.HttpContext.Request.Path;
-            //            if (!string.IsNullOrEmpty(accessToken) &&
-            //                (path.StartsWithSegments("/ChatHub")))
-            //            {
-            //                // Read the token out of the query string
-            //                context.Token = accessToken;
-            //            }
-            //            return Task.CompletedTask;
-            //        }
-            //};
-            //});
+        //                // If the request is for our hub...
+        //                var path = context.HttpContext.Request.Path;
+        //            if (!string.IsNullOrEmpty(accessToken) &&
+        //                (path.StartsWithSegments("/ChatHub")))
+        //            {
+        //                    // Read the token out of the query string
+        //                    context.Token = accessToken;
+        //            }
+        //            return Task.CompletedTask;
+        //        }
+        //    };
+        //});
 
             services.AddMvc();
 
