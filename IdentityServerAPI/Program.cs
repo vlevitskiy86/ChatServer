@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using System;
 
 namespace IdentityServerAPI
 {
@@ -14,6 +8,8 @@ namespace IdentityServerAPI
     {
         public static void Main(string[] args)
         {
+            Console.Title = "IdentityServer";
+
             CreateWebHostBuilder(args).Build().Run();
         }
 

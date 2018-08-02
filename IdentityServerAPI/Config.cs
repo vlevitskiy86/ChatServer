@@ -36,37 +36,18 @@ namespace IdentityServerAPI
                     AllowedScopes = { "api1" }
                 },
 
-                // resource owner password grant client
-                new Client
-                {
-                    ClientId = "ro.client",
-                    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                //// resource owner password grant client
+                //new Client
+                //{
+                //    ClientId = "ro.client",
+                //    AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
 
-                    ClientSecrets =
-                    {
-                        new Secret("secret".Sha256())
-                    },
-                    AllowedScopes = { "api1" }
-                }
-            };
-        }
-
-        public static List<TestUser> GetUsers()
-        {
-            return new List<TestUser>
-            {
-                new TestUser
-                {
-                    SubjectId = "1",
-                    Username = "User 1",
-                    Password = "password1"
-                },
-                new TestUser
-                {
-                    SubjectId = "2",
-                    Username = "User 2",
-                    Password = "password2"
-                }
+                //    ClientSecrets =
+                //    {
+                //        new Secret("secret".Sha256())
+                //    },
+                //    AllowedScopes = { "api1" }
+                //}
             };
         }
     }
