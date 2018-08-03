@@ -1,10 +1,10 @@
-﻿using ChatServer.Models;
+﻿using ChatApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChatServer.Services
+namespace ChatApi.Services
 {
     public interface IMessageService
     {

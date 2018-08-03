@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChatServer.Models;
-using ChatServer.Services;
+using ChatApi.Models;
+using ChatApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChatServer.Controllers
+namespace ChatApi.Controllers
 {
     [Authorize]
     [Route("api/[controller]")]

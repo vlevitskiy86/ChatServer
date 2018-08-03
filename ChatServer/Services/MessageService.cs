@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChatServer.Data;
-using ChatServer.Models;
+using ChatApi.Data;
+using ChatApi.Models;
 
-namespace ChatServer.Services
+namespace ChatApi.Services
 {
     public class MessageService : IMessageService
     {

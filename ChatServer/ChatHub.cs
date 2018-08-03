@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.SignalR;
 using System.Threading.Tasks;
 
-namespace ChatServer
+namespace ChatApi
 {
     [Authorize]
     public class ChatHub : Hub

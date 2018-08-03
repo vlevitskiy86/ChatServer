@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using ChatServer.Data;
-using ChatServer.Services;
+using ChatApi.Data;
+using ChatApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,7 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace ChatServer
+namespace ChatApi
 {
     public class Startup
     {
@@ -55,62 +55,7 @@ namespace ChatServer
                     options.ApiName = "api1";
                 });
 
-        //    services.AddAuthentication(options =>
-        //    {
-        //            // Identity made Cookie authentication the default.
-        //            // However, we want JWT Bearer Auth to be the default.
-        //            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        //        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        //    })
-        //.AddJwtBearer(options =>
-        //{
-        //        // Configure JWT Bearer Auth to expect our security key
-        //        options.TokenValidationParameters =
-        //        new TokenValidationParameters
-        //        {
-        //            LifetimeValidator = (before, expires, token, param) =>
-        //            {
-        //                return expires > DateTime.UtcNow;
-        //            },
-        //            ValidateAudience = false,
-        //            ValidateIssuer = false,
-        //            ValidateActor = false,
-        //            ValidateLifetime = true,
-        //                //IssuerSigningKey = SecurityKey
-        //            };
-
-        //        // We have to hook the OnMessageReceived event in order to
-        //        // allow the JWT authentication handler to read the access
-        //        // token from the query string when a WebSocket or 
-        //        // Server-Sent Events request comes in.
-        //        options.Events = new JwtBearerEvents
-        //    {
-        //        OnMessageReceived = context =>
-        //        {
-        //            var accessToken = context.Request.Query["access_token"];
-
-        //                // If the request is for our hub...
-        //                var path = context.HttpContext.Request.Path;
-        //            if (!string.IsNullOrEmpty(accessToken) &&
-        //                (path.StartsWithSegments("/ChatHub")))
-        //            {
-        //                    // Read the token out of the query string
-        //                    context.Token = accessToken;
-        //            }
-        //            return Task.CompletedTask;
-        //        }
-        //    };
-        //});
-
             services.AddMvc();
-
-            //services.AddCors(options => options.AddPolicy("CorsPolicy",
-            //builder =>
-            //{
-            //    builder.AllowAnyMethod().AllowAnyHeader()
-            //           .WithOrigins("http://localhost:55830")
-            //           .AllowCredentials();
-            //}));
 
             services.AddSignalR();
         }
