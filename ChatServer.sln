@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServerAPI", "Identi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ChatIdentityServer", "ChatIdentityServer\ChatIdentityServer.csproj", "{0389A996-3C23-489F-B485-7D5DE214B575}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AspIdentity", "AspIdentity\AspIdentity.csproj", "{EDA8FC9B-8581-423F-9BA5-487C59051DA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{0389A996-3C23-489F-B485-7D5DE214B575}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0389A996-3C23-489F-B485-7D5DE214B575}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0389A996-3C23-489F-B485-7D5DE214B575}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDA8FC9B-8581-423F-9BA5-487C59051DA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDA8FC9B-8581-423F-9BA5-487C59051DA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDA8FC9B-8581-423F-9BA5-487C59051DA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDA8FC9B-8581-423F-9BA5-487C59051DA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

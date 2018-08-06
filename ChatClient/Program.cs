@@ -11,6 +11,7 @@ namespace ChatClient
     {
         private static HubConnection connection;
         private static string _name;
+        private static string _password;
         private static string _token;
         private static HttpClient _client = new HttpClient();
         private static string _baseAPIUri = "http://localhost:5001/";
@@ -20,6 +21,9 @@ namespace ChatClient
         {
             Console.WriteLine("What is your name?");
             _name = Console.ReadLine();
+
+            Console.WriteLine("What is your password?");
+            _password = Console.ReadLine();
 
             CallToTokenServer();
 
@@ -45,7 +49,7 @@ namespace ChatClient
                 //}
                 line = Console.ReadLine();
                 SendMessage(line);
-            } while (line != "exit");
+            } while (line.ToLower() != "exit");
         }
 
         public static void CallToTokenServer()
@@ -57,8 +61,12 @@ namespace ChatClient
                 return;
             }
 
-            var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
-            var tokenResponse = tokenClient.RequestClientCredentialsAsync("api1").GetAwaiter().GetResult();
+            //var tokenClient = new TokenClient(disco.TokenEndpoint, "client", "secret");
+            //var tokenResponse = tokenClient.RequestClientCredentialsAsync("api1").GetAwaiter().GetResult();
+
+            // request token
+            var tokenClient = new TokenClient(disco.TokenEndpoint, "ro.client", "secret");
+            var tokenResponse = tokenClient.RequestResourceOwnerPasswordAsync(_name, _password, "api1").GetAwaiter().GetResult();
 
             if (tokenResponse.IsError)
             {
