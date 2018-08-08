@@ -28,36 +28,34 @@ namespace ChatApi.Services
             _context.SaveChangesAsync();
         }
 
-        public Task AddMessage(Message message)
+        public bool AddMessage(Message message)
         {
-            message.Id = _context.Messages.Count();
-            _context.Messages.AddAsync(message);
-            return _context.SaveChangesAsync();
+            message.Id = _context.Messages.Count() + 1;
+            _context.Messages.Add(message);
+            return _context.SaveChanges() > 0;
         }
 
-        public Task<List<Message>> Messages()
+        public IEnumerable<Message> GetMessages()
         {
-            var result = _context.Messages.ToList();
-            return Task.FromResult(result);
+            return _context.Messages;
         }
 
-        public Task<List<Message>> NewMessages()
+        public IEnumerable<Message> GetNewMessages()
         {
-            var result = _context.Messages.Where(x => x.IsNew == true).ToList();
-            return Task.FromResult(result);
+            return _context.Messages.Where(x => x.IsNew == true).ToList();
         }
 
-        public Task MarkMessageAsRead(int id)
+        public bool MarkMessageAsRead(int id)
         {
             _context.Messages.Find(id).IsNew = false;
-            return _context.SaveChangesAsync(); ;
+            return _context.SaveChanges() > 0;
         }
 
-        public Task DeleteMessage(int id)
+        public bool DeleteMessage(int id)
         {
             var obj = _context.Messages.Find(id);
             _context.Messages.Remove(obj);
-            return _context.SaveChangesAsync();
+            return _context.SaveChanges() > 0;
         }
     }
 }

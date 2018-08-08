@@ -8,10 +8,10 @@ namespace ChatApi.Services
 {
     public interface IMessageService
     {
-        Task<List<Message>> Messages();
-        Task<List<Message>> NewMessages();
-        Task AddMessage(Message message);
-        Task MarkMessageAsRead(int id);
-        Task DeleteMessage(int id);
+        IEnumerable<Message> GetMessages();
+        IEnumerable<Message> GetNewMessages();
+        bool AddMessage(Message message);
+        bool MarkMessageAsRead(int id);
+        bool DeleteMessage(int id);
     }
 }

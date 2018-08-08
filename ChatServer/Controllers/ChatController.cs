@@ -7,6 +7,7 @@ using ChatApi.Models;
 using ChatApi.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ChatApi.Controllers
 {
@@ -14,33 +15,40 @@ namespace ChatApi.Controllers
     [Route("api/[controller]")]
     public class ChatController : Controller
     {
-        //private readonly IList<Message> Messages = new List<Message>();
-        IMessageService _service;
+        private readonly IMessageService _service;
+        private readonly IHubContext<ChatHub> _hubContext;
 
-        public ChatController(IMessageService service)
+        public ChatController(IMessageService service, IHubContext<ChatHub> hubContext)
         {
             _service = service;
+            _hubContext = hubContext;
         }
 
-        [HttpPost]
+        [HttpPost("NewMessage")]
         public IActionResult Post([FromBody] Message message)
         {
-            _service.AddMessage(message);
-
-            return Ok();
+            if (_service.AddMessage(message))
+            {
+                _hubContext.Clients.All.SendAsync("ReceiveMessage", message.AuthorName, message.Text);
+                return NoContent();
+            }
+            else
+            {
+                return StatusCode(500);
+            }
         }
 
         // GET api/
         [HttpGet("Messages")]
-        public List<Message> AllMessages()
+        public IActionResult AllMessages()
         {
-            return _service.Messages().GetAwaiter().GetResult();
+            return Ok(_service.GetMessages());
         }
 
         [HttpGet("NewMessages")]
-        public List<Message> NewMessages()
+        public IActionResult NewMessages()
         {
-            return _service.NewMessages().GetAwaiter().GetResult();
+            return Ok(_service.GetNewMessages());
         }
 
         //[HttpGet("NewMessagesRead")]

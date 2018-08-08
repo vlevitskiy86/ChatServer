@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 
 namespace ChatApi
 {
-    [Authorize]
     public class ChatHub : Hub
     {
         public async Task SendMessage(string user, string message)

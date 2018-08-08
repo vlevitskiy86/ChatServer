@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.SignalR.Client;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatClient
@@ -27,26 +29,11 @@ namespace ChatClient
 
             CallToTokenServer();
 
-            connection = new HubConnectionBuilder()
-                .WithUrl("http://localhost:5001/chatHub", options =>
-                {
-                    options.AccessTokenProvider = () => Task.FromResult(_token);
-                })
-                //.WithUrl("http://localhost:5001/chatHub")
-                .Build();
-
-            Connect();
+            ConnectToSignalr();
 
             do
             {
-
                 //GetMessages().GetAwaiter().GetResult();
-                ////while (true)
-                //{
-                //    instance.GetNewMessages().GetAwaiter().GetResult();
-                //    instance.GetNewMessages().GetAwaiter().GetResult();
-                //    instance.GetNewMessages().GetAwaiter().GetResult();
-                //}
                 line = Console.ReadLine();
                 SendMessage(line);
             } while (line.ToLower() != "exit");
@@ -68,6 +55,7 @@ namespace ChatClient
             var tokenClient = new TokenClient(disco.TokenEndpoint, "ro.client", "secret");
             var tokenResponse = tokenClient.RequestResourceOwnerPasswordAsync(_name, _password, "api1").GetAwaiter().GetResult();
 
+            //var tokenResponse = tokenClient.RequestResourceOwnerPasswordAsync("test@mail.com", "Pass123#", "api1").GetAwaiter().GetResult();
             if (tokenResponse.IsError)
             {
                 Console.WriteLine(tokenResponse.Error);
@@ -77,38 +65,26 @@ namespace ChatClient
             Console.WriteLine(tokenResponse.Json);
 
             _token = tokenResponse.AccessToken;
-            //_client.SetBearerToken(_token);
-
-            //var response = _client.GetAsync("http://localhost:5001/identity").GetAwaiter().GetResult();
-            //if (!response.IsSuccessStatusCode)
-            //{
-            //    Console.WriteLine(response.StatusCode);
-            //}
-            //else
-            //{
-            //    var content = response.Content.ReadAsStringAsync();
-            //    Console.WriteLine(JArray.Parse(content.Result));
-            //}
+            _client.SetBearerToken(_token);
         }
 
-        private static async void Connect()
+        private static async void ConnectToSignalr()
         {
+            connection = new HubConnectionBuilder()
+               .WithUrl("http://localhost:5001/chatHub", options =>
+               {
+                   options.AccessTokenProvider = () => Task.FromResult(_token);
+               })
+               .Build();
+
             connection.On<string, string>("ReceiveMessage", (user, message) =>
             {
-                //this.Dispatcher.Invoke(() =>
-                //{
-                //    var newMessage = $"{user}: {message}";
-                //    messagesList.Items.Add(newMessage);
-                //});
                 Console.WriteLine("{0} : {1}", user, message);
             });
 
             try
             {
                 await connection.StartAsync();
-                //messagesList.Items.Add("Connection started");
-                //connectButton.IsEnabled = false;
-                //sendButton.IsEnabled = true;
             }
             catch (Exception ex)
             {
@@ -120,8 +96,11 @@ namespace ChatClient
         {
             try
             {
-                await connection.InvokeAsync("SendMessage",
-                    _name, text);
+                string message = string.Format("'Id' : '5','AuthorName' : '{0}','Text' : '{1}','When' : '{2}','IsNew' : 'true'", _name, text, DateTime.Now.ToShortTimeString());
+
+                var result = await _client.PostAsync(_baseAPIUri + "api/chat/newmessage", new StringContent("{" + message + "}", Encoding.Unicode, "application/json"));
+
+                Console.WriteLine(result.StatusCode); 
             }
             catch (Exception ex)
             {
