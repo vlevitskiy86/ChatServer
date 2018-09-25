@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ChatApi</name>
+    </assembly>
+    <members>
+        <member name="M:ChatApi.Controllers.ChatController.SendMessage(ChatApi.Models.Message)">
+            <summary>
+            Sends a message to all chat members.
+            </summary>
+            <param name="message">Message body</param>
+        </member>
+        <member name="M:ChatApi.Controllers.ChatController.SendPrivateMessage(ChatApi.Models.Message,System.String)">
+            <summary>
+            Sends a privat message to the specific receiver.
+            </summary>
+            <param name="message">Message body</param>
+            <param name="name">Reciver's name</param>
+        </member>
+        <member name="M:ChatApi.Controllers.ChatController.GetMessages">
+            <summary>
+            Gets all messages from current session.
+            </summary>
+            <returns>Collection of <see cref="T:ChatApi.Models.Message"/></returns>
+        </member>
+        <member name="M:ChatApi.Controllers.ChatController.GetCashedMessages">
+            <summary>
+            Gets only cached messages from current session.
+            </summary>
+            <returns>Collection of <see cref="T:ChatApi.Models.Message"/></returns>
+        </member>
+        <member name="M:ChatApi.Controllers.ChatController.GetMessagesBySender(System.String)">
+            <summary>
+            Gets messages from specific sender.
+            </summary>
+            <param name="name">Sender name.</param>
+            <returns>Collection of <see cref="T:ChatApi.Models.Message"/></returns>
+        </member>
+        <member name="M:ChatApi.Controllers.ChatController.DeleteMessage(System.Int32)">
+            <summary>
+            Delets mesage by message ID.
+            </summary>
+            <param name="id">Message ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChatApi.Controllers.ChatController.UpdateMessageFull(System.Int32,ChatApi.Models.Message)">
+            <summary>
+            Updates a messsage by ID.
+            </summary>
+            <param name="id">Message for update ID.</param>
+            <param name="msg">Message body.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ChatApi.Controllers.ChatController.UpdateMessage(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{ChatApi.Models.Message})">
+            <summary>
+            Updates a message partialy by ID.
+            </summary>
+            <param name="id">Message for update ID</param>
+            <param name="msg">Fields for update body</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
